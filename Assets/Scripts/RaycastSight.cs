@@ -6,6 +6,7 @@ public class RaycastSight : MonoBehaviour
 {
     [SerializeField] Transform originTR;
     [SerializeField] float rayLenght;
+    public string raycastInfo;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +22,9 @@ public class RaycastSight : MonoBehaviour
         if (Physics.Raycast(originTR.position, originTR.forward, out hitInfo, rayLenght))
         {
             Debug.Log(hitInfo.collider.name);
+            raycastInfo = hitInfo.collider.name;
         }
+
     }
     void OnDrawGizmos()
     {

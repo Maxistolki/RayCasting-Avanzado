@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RaycastSight : MonoBehaviour
+public class RaycastKill : MonoBehaviour
 {
     [SerializeField] Transform originTR;
-    public bool estaTocando;
     [SerializeField] float rayLenght;
-    public string raycastInfo;
+    [SerializeField] SceneManagerScript sceneManager;
 
+    public string raycastInfo;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,18 +25,21 @@ public class RaycastSight : MonoBehaviour
         {
             Debug.Log(hitInfo.collider.name);
             raycastInfo = hitInfo.collider.name;
-            estaTocando = true;
-            }
-            else
+           
+            if (raycastInfo == "Player")
             {
-                estaTocando = false;
+                sceneManager.derrota();
+            Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
             }
+
         }
 
+    }
     void OnDrawGizmos()
     {
-        Color color = Color.blue;
-        Gizmos.color = color;
+        Color color = Color.red;
+        Gizmos.color = color    ;
         Gizmos.DrawLine(originTR.position, originTR.position + originTR.forward * rayLenght);
     }
 }

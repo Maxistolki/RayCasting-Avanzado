@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class AgentScript : MonoBehaviour
 {
-    NavMeshAgent agent;
+    [SerializeField] NavMeshAgent agent;
     [SerializeField] Transform[] patrolPoints;
     [SerializeField] bool isPatrolling = true;
     [SerializeField] float arrivalDistance = 0.5f;
@@ -16,6 +16,7 @@ public class AgentScript : MonoBehaviour
     [SerializeField] int currentPatrolPointIndex;
     [SerializeField] RaycastSight raycast;
     [SerializeField] Transform player;
+    [SerializeField] float cooldown = 2;
 
     private void Awake()
     {
@@ -31,11 +32,21 @@ public class AgentScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        agent.destination = currentDestinantion.position;
+
         if (raycast.raycastInfo == "Player")
         {
+            cooldown = 2;
             agent.destination = player.position;
+            Debug.Log(agent.destination);
+
         }
-        else if (agent.hasPath && agent.remainingDistance <= arrivalDistance) // hasPath --> si ya calculó el recorrido
+        if ((raycast.raycastInfo != "Player" || !  raycast.estaTocando) && cooldown >= 0)
+        {
+            agent.destination = player.position;
+            cooldown -= Time.deltaTime;
+        }
+        else if (agent.hasPath && agent.remainingDistance <= arrivalDistance && cooldown <= 0) // hasPath --> si ya calculó el recorrido
         {
             if (currentPatrolPointIndex < patrolPoints.Length - 1)
             {
@@ -50,7 +61,6 @@ public class AgentScript : MonoBehaviour
 
         
 
-        agent.destination = currentDestinantion.position;
         velocity = agent.velocity.magnitude;
         anim.SetFloat("Speed",velocity);
   
